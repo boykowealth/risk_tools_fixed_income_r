@@ -7,9 +7,9 @@
 #' @return A tibble with maturities and zero rates.
 #' @export
 #' @examples
-#' bond_data <- tibble(maturity = c(1, 2, 3, 4),
+#' swap_data <- tibble(maturity = c(1, 2, 3, 4),
 #'                     rate = c(0.03, 0.035, 0.04, 0.045)
-#' BOOTSTRAP(data=bond_data)
+#' BOOTSTRAP_S(data=swap_data)
 
 BOOTSTRAP_S <- function(data) {
   
@@ -40,11 +40,3 @@ BOOTSTRAP_S <- function(data) {
   
   return(result)
 }
-
-bond_data <- tibble(
-  maturity = c(1, 2, 3, 4),
-  price = c(98, 95, 92, 88),
-  coupon = c(0, 5, 5, 5)
-)
-
-BOOTSTRAP(data=bond_data, base_value=100)
