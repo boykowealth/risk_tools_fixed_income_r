@@ -19,7 +19,7 @@ HW <- function(LT_mean, rate, delta_T, sigma, theta, T2M, nsims){
   
   periods <- T2M / delta_T
   rates <- matrix(0, nrow = periods, ncol = nsims)
-  rates[1, ] <- rate  # Set initial rate
+  rates[1, ] <- rate
   
   diffusion <- matrix(stats::rnorm(periods * nsims, mean = 0, sd = sqrt(delta_T)), ncol = nsims, nrow = periods)
   
@@ -27,7 +27,7 @@ HW <- function(LT_mean, rate, delta_T, sigma, theta, T2M, nsims){
     time <- (t-1) * delta_T
     drift_term <- theta * (LT_mean(time) - rates[t-1, ]) * delta_T
     diffusion_term <- sigma * diffusion[t, ]
-    rates[t, ] <- rates[t-1, ] + drift_term + diffusion_term  # No sqrt term like CIR
+    rates[t, ] <- rates[t-1, ] + drift_term + diffusion_term
   }
   
   rates <- as_tibble(rates, .name_repair = "minimal")
@@ -37,5 +37,4 @@ HW <- function(LT_mean, rate, delta_T, sigma, theta, T2M, nsims){
   return(rates)
 }
 
-# Example Usage:
 HW(LT_mean = function(t) 0.05, rate = 0.03, delta_T = 1/12, sigma = 0.02, theta = 0.1, T2M = 1, nsims = 5)
