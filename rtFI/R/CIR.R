@@ -1,6 +1,7 @@
-#' Vasicek Interest Rate Simulation
+#' Cox-Ingersoll-Ross (CIR) Interest Rate Simulation
 #'
-#' This function simulates the Vasicek model, which is commonly used for interest rate modeling.
+#' This function simulates the CIR model, which is commonly used in fixed income pricing.
+#' It ensures that interest rates remain non-negative due to the square-root diffusion term.
 #'
 #' @param LT_mean Long-term mean interest rate (mu)
 #' @param rate Initial interest rate
@@ -12,10 +13,9 @@
 #' @return A tibble with simulated interest rate paths
 #' @export
 #' @examples
-#' vasicek(LT_mean = 0.05, rate = 0.03, delta_T = 1/12, sigma = 0.02, theta = 0.1, T2M = 1, nsims = 5)
+#' CIR(LT_mean = 0.05, rate = 0.03, delta_T = 1/12, sigma = 0.02, theta = 0.1, T2M = 1, nsims = 5)
 
-
-vasicek <- function(LT_mean, rate, delta_T, sigma, theta, T2M, nsims){
+CIR <- function(LT_mean, rate, delta_T, sigma, theta, T2M, nsims){
   
   periods <- T2M / delta_T
   rates <- matrix(0, nrow = periods, ncol = nsims)
@@ -24,7 +24,9 @@ vasicek <- function(LT_mean, rate, delta_T, sigma, theta, T2M, nsims){
   diffusion <- matrix(stats::rnorm(periods * nsims, mean = 0, sd = sqrt(delta_T)), ncol = nsims, nrow = periods)
   
   for (t in 2:periods) {
-    rates[t, ] <- rates[t-1, ] + theta * (LT_mean - rates[t-1, ]) * delta_T + sigma * diffusion[t, ]
+    drift_term <- theta * (LT_mean - rates[t-1, ]) * delta_T
+    diffusion_term <- sigma * sqrt(pmax(rates[t-1, ], 0)) * diffusion[t, ]
+    rates[t, ] <- pmax(rates[t-1, ] + drift_term + diffusion_term, 0)
   }
   
   rates <- as_tibble(rates, .name_repair = "minimal")
@@ -34,5 +36,4 @@ vasicek <- function(LT_mean, rate, delta_T, sigma, theta, T2M, nsims){
   return(rates)
 }
 
-
-
+CIR(LT_mean = 0.05, rate = 0.03, delta_T = 1/12, sigma = 0.02, theta = 0.1, T2M = 1, nsims = 5)

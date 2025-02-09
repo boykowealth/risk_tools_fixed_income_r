@@ -14,7 +14,9 @@
 #' @param delta_T Time step
 #' @param nsims Number of simulations
 #' @return A tibble with simulated paths
-#' @export #GBM(spot=10, drift=0, sigma=0.2, T2M=1, delta_T=1/12, nsims=2)
+#' @export
+#' @examples
+#' GBM(spot=10, drift=0, sigma=0.2, T2M=1, delta_T=1/12, nsims=2)
 
 GBM <- function(spot, drift, sigma, T2M, delta_T, nsims){
   
