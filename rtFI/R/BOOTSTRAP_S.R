@@ -3,7 +3,7 @@
 #' This function bootstraps a zero-coupon yield curve from swap rates.
 #' It assumes annualized par rates
 #'
-#' @param bond_data A data frame with swap rates and maturities.
+#' @param data A data frame with swap rates and maturities.
 #' @return A tibble with maturities and zero rates.
 #' @export
 #' @examples
